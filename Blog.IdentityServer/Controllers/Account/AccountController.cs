@@ -111,11 +111,12 @@ namespace IdentityServer4.Quickstart.UI
 
             if (ModelState.IsValid)
             {
-                var user = _userManager.Users.FirstOrDefault(d => (d.LoginName == model.Username || d.Email == model.Username) && !d.tdIsDelete);
+                var user = _userManager.Users.FirstOrDefault(d => (d.UserName == model.Username || d.Email == model.Username) && !d.tdIsDelete);
 
                 if (user != null && !user.tdIsDelete)
                 {
-                    var result = await _signInManager.PasswordSignInAsync(user.LoginName, model.Password, model.RememberLogin, lockoutOnFailure: true);
+                    var result = await _signInManager.PasswordSignInAsync(user.UserName, model.Password, model.RememberLogin, lockoutOnFailure: true);
+                    //result = await _signInManager.CheckPasswordSignInAsync(user, model.Password, true);
                     if (result.Succeeded)
                     {
                         await _events.RaiseAsync(new UserLoginSuccessEvent(user.UserName, user.Id.ToString(), user.UserName));
